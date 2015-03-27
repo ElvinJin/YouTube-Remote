@@ -1,0 +1,14 @@
+#left-col {
+	background-color: red;
+	height: 600px;
+}
+
+#control {
+	background-color: green;
+	height: 300px;
+}
+
+#playlist {
+	background-color: yellow;
+	height: 300px;
+}

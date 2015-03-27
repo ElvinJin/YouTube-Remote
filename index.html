@@ -2,6 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>YouTube Remote Player</title>
     <!-- Bootstrap core CSS -->
       <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -12,13 +13,25 @@
   </head>
   <body>
     <div class="container">
-      <h1>Elvin's YouTube Remote Player</h1>
+      <div class="top-section visible-md-block visible-lg-block">
+        <h1>YouTube Remote Player</h1>
+        <h2>Desktop | by Elvin Jin</h3>
+      </div>
+      <div class="top-section visible-sm-block">
+        <h2>YouTube Remote Player</h1>
+        <h3>Tablet | by Elvin Jin</h3>
+      </div>
+      <div class="top-section visible-xs-block">
+        <h3>YouTube Remote Player</h1>
+        <h5>Mobile | by Elvin Jin</h3>
+      </div>
       <div class="row">
-        <div id="left-col" class="">
-          <div id="control" class="row"></div>
-          <div id="playlist" class="row"></div>
+        <div id="left-col" class="hidden-xs hidden-sm col-md-8">
         </div>
-        <div id="right-col" class=""></div>
+        <div id="right-col" class="col-xs-12 col-md-4">
+          <div id="control" class="col-md-12"></div>
+          <div id="playlist" class="col-md-12"></div>
+        </div>
       </div>
     </div>
   </body>
