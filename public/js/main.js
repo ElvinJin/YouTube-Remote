@@ -5,17 +5,18 @@ firstScriptTag.parentNode.insertBefore( tag, firstScriptTag );
 
 var player;
 function onYouTubeIframeAPIReady() {
-
-	player = new YT.Player( 'player', {
-		height : '100%',
-		width : '100%',
-		playerVars: { 'controls' : 0 },
-		videoId : 'M7lc1UVf-VE',
-		events : {
-			// 'onReady': onPlayerReady,
-			'onStateChange': onPlayerStateChange
-		}
-	} );
+	if (window.innerWidth >= 992) {
+		player = new YT.Player( 'player', {
+			height : '100%',
+			width : '100%',
+			playerVars: { 'controls' : 0 },
+			videoId : 'M7lc1UVf-VE',
+			events : {
+				// 'onReady': onPlayerReady,
+				'onStateChange': onPlayerStateChange
+			}
+		} );
+	}
 }
 
 window.addEventListener('resize', function() {
