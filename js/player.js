@@ -26,11 +26,11 @@ function onPlayerStateChange ( event ) {
 }
 
 function stepBackwardClicked () {
-	console.log('sb');
+	player.loadVideoById('6Y47qPyoywc');
 }
 
 function stepForwardClicked () {
-	console.log('sf');
+	player.loadVideoById('xsWN1Wakuec');
 }
 
 // BACKWARD - START
