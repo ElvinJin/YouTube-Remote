@@ -1,5 +1,11 @@
-#left-col {
-	height: 520px;
+#player {
+	height: 420px;
+}
+
+@media (min-width:1200px) and (max-width: 2500px) {
+    #player {
+		height: 500px;
+	}  
 }
 
 #control {
