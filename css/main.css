@@ -1,21 +1,19 @@
 #left-col {
 	background-color: red;
 	height: 600px;
-	-webkit-box-shadow: 0px 0px 15px -5px rgba(0,0,0,0.75);
-	-moz-box-shadow: 0px 0px 15px -5px rgba(0,0,0,0.75);
-	box-shadow: 0px 0px 15px -5px rgba(0,0,0,0.75);
-
 }
 
 #control {
 	height: 290px;
-	-webkit-box-shadow: 0px 0px 15px -5px rgba(0,0,0,0.75);
-	-moz-box-shadow: 0px 0px 15px -5px rgba(0,0,0,0.75);
-	box-shadow: 0px 0px 15px -5px rgba(0,0,0,0.75);
 }
 
 #playlist {
 	height: 290px;
+}
+
+#left-col, #playlist, #control {
+	overflow: hidden;
+	border-radius: 4px;
 	-webkit-box-shadow: 0px 0px 15px -5px rgba(0,0,0,0.75);
 	-moz-box-shadow: 0px 0px 15px -5px rgba(0,0,0,0.75);
 	box-shadow: 0px 0px 15px -5px rgba(0,0,0,0.75);
@@ -131,4 +129,9 @@ span.icon-text {
 	-webkit-box-shadow: inset 0px 0px 34px -16px rgba(0,0,0,1);
 	-moz-box-shadow: inset 0px 0px 34px -16px rgba(0,0,0,1);
 	box-shadow: inset 0px 0px 34px -16px rgba(0,0,0,1);
+}
+
+#vid-input {
+	height: 40px;
+	margin-bottom: 20px;
 }
