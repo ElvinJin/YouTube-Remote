@@ -48,6 +48,16 @@ io.on( 'connection', function( socket ) {
 		io.emit( 'sb' );
 	} );
 	
+	socket.on( 'backward', function( ) {
+		console.log( 'Broadcasting BACKWARD' );
+		io.emit( 'backward' );
+	} );
+	
+	socket.on( 'forward', function( ) {
+		console.log( 'Broadcasting FORWARD' );
+		io.emit( 'forward' );
+	} );
+	
 	socket.on( 'sf', function( ) {
 		console.log( 'Broadcasting STEP-FORWARD' );
 		io.emit( 'sf' );

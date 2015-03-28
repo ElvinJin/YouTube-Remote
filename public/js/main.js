@@ -69,6 +69,24 @@ function broadcastStepBackward () {
 	socket.emit('sb');
 }
 
+var backwardTimeOut;
+function backwardMouseDown () {
+	socket.emit('backward');
+	backwardTimeOut = setInterval(function(){socket.emit('backward');}, 300);
+}
+function backwardMouseUp () {
+	clearInterval(backwardTimeOut);
+}
+
+var forwardTimeOut;
+function forwardMouseDown () {
+	socket.emit('forward');
+	forwardTimeOut = setInterval(function(){socket.emit('forward');}, 300);
+}
+function forwardMouseUp () {
+	clearInterval(forwardTimeOut);
+}
+
 function broadcastStepForward () {
 	socket.emit('sf');
 }
@@ -81,45 +99,6 @@ function broadcastUnmute () {
 	socket.emit('unmute');
 }
 ////// SEND - END //////
-
-// BACKWARD - START
-function backward () {
-	targetTime = player.getCurrentTime() - 2.0;
-	if (targetTime < 0) {
-		targetTime = 0;
-	}
-	player.seekTo(targetTime);
-}
-
-var backwardTimeOut;
-
-function backwardMouseDown () {
-	backward();
-	backwardTimeOut = setInterval(function(){backward()}, 300);
-}
-
-function backwardMouseUp () {
-	clearInterval(backwardTimeOut);
-}
-// BACKWARD - END
-
-// FORWARD - START
-function forward () {
-	currentTime = player.getCurrentTime();
-	player.seekTo(currentTime+2.0);
-}
-
-var forwardTimeOut;
-
-function forwardMouseDown () {
-	forward();
-	forwardTimeOut = setInterval(function(){forward()}, 300);
-}
-
-function forwardMouseUp () {
-	clearInterval(forwardTimeOut);
-}
-// FORWARD - END
 
 ////// RECEIVE - START //////
 socket.on( 'play', function( ) {
@@ -139,11 +118,16 @@ socket.on( 'sb', function( ) {
 } );
 
 socket.on( 'backward', function( ) {
-	player.playVideo();
+	targetTime = player.getCurrentTime() - 2.0;
+	if (targetTime < 0) {
+		targetTime = 0;
+	}
+	player.seekTo(targetTime);
 } );
 
 socket.on( 'forward', function( ) {
-	player.playVideo();
+	currentTime = player.getCurrentTime();
+	player.seekTo(currentTime+2.0);
 } );
 
 socket.on( 'sf', function( ) {
