@@ -1,3 +1,10 @@
+.custom-btn {
+	font-size: 1em;
+	border: none;
+	outline: none;
+	cursor: pointer;
+}
+
 #player {
 	height: 420px;
 }
@@ -9,10 +16,6 @@
 }
 
 #control {
-	height: 290px;
-}
-
-#playlist {
 	height: 290px;
 }
 
@@ -58,21 +61,10 @@
 .control-btn {
 	height: 56px;
 	margin-bottom: 20px;
-	line-height: 56px;
-	text-align: center;
-	padding: 0;
-}
-
-.control-btn a {
 	color: white;
-	width: 100%;
-	height: 100%;
-	display: block;
-	font-size: 1em;
 }
 
-.control-btn a:hover {
-	text-decoration: none;
+.control-btn:hover {
 	-webkit-box-shadow: inset 0px 0px 34px -16px rgba(0,0,0,1);
 	-moz-box-shadow: inset 0px 0px 34px -16px rgba(0,0,0,1);
 	box-shadow: inset 0px 0px 34px -16px rgba(0,0,0,1);
@@ -121,16 +113,11 @@ span.icon-text {
 #clear-btn {
 	height: 40px;
 	margin-bottom: 20px;
-	line-height: 40px;
-	text-align: center;
-	padding: 0;
 	background-color: #FFA000; 
 	color: white;
-	font-size: 1em;
 }
 
 #clear-btn:hover {
-	text-decoration: none;
 	-webkit-box-shadow: inset 0px 0px 34px -16px rgba(0,0,0,1);
 	-moz-box-shadow: inset 0px 0px 34px -16px rgba(0,0,0,1);
 	box-shadow: inset 0px 0px 34px -16px rgba(0,0,0,1);
