@@ -22,10 +22,10 @@ function onPlayerReady( event ) {
 	// event.target.playVideo();
 }
 
-function onPlayerStateChange( event ) {
+function onPlayerStateChange ( event ) {
 }
 
-function stepBackwardClicked() {
+function stepBackwardClicked () {
 	console.log('sb');
 }
 
@@ -33,13 +33,44 @@ function stepForwardClicked () {
 	console.log('sf');
 }
 
-function backwardClicked() {
-	console.log('b');
+// BACKWARD - START
+function backward () {
+	targetTime = player.getCurrentTime() - 2.0;
+	if (targetTime < 0) {
+		targetTime = 0;
+	}
+	player.seekTo(targetTime);
 }
 
-function forwardClicked() {
-	console.log('f');
+var backwardTimeOut;
+
+function backwardMouseDown () {
+	backward();
+	backwardTimeOut = setInterval(function(){backward()}, 300);
 }
+
+function backwardMouseUp () {
+	clearInterval(backwardTimeOut);
+}
+// BACKWARD - END
+
+// FORWARD - START
+function forward () {
+	currentTime = player.getCurrentTime();
+	player.seekTo(currentTime+2.0);
+}
+
+var forwardTimeOut;
+
+function forwardMouseDown () {
+	forward();
+	forwardTimeOut = setInterval(function(){forward()}, 300);
+}
+
+function forwardMouseUp () {
+	clearInterval(forwardTimeOut);
+}
+// FORWARD - END
 
 function stopVideo() {
 	player.stopVideo();
