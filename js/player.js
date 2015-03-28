@@ -12,8 +12,8 @@ function onYouTubeIframeAPIReady() {
 		playerVars: { 'controls' : 0 },
 		videoId : 'M7lc1UVf-VE',
 		events : {
-			'onReady': onPlayerReady,
-			'onStateChange': onPlayerStateChange
+			// 'onReady': onPlayerReady,
+			// 'onStateChange': onPlayerStateChange
 		}
 	} );
 }
@@ -22,12 +22,23 @@ function onPlayerReady( event ) {
 	// event.target.playVideo();
 }
 
-var done = false;
 function onPlayerStateChange( event ) {
-	if ( event.data == YT.PlayerState.PLAYING && ! done ) {
-		setTimeout(stopVideo, 6000);
-		done = true;
-	}
+}
+
+function stepBackwardClicked() {
+	console.log('sb');
+}
+
+function stepForwardClicked () {
+	console.log('sf');
+}
+
+function backwardClicked() {
+	console.log('b');
+}
+
+function forwardClicked() {
+	console.log('f');
 }
 
 function stopVideo() {

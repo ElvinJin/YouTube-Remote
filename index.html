@@ -44,43 +44,43 @@
             </div>
             <div class="the-panel">
               <div class="row">
-                <button class="control-btn col-xs-4 custom-btn" id="ctrl-btn-play">
+                <button class="control-btn col-xs-4 custom-btn" id="ctrl-btn-play" onclick="player.playVideo()">
                   <i class="fa fa-play"></i>
                   <span class="visible-sm-inline icon-text">PLAY</span>
                 </button>
-                <button class="control-btn col-xs-4 custom-btn" id="ctrl-btn-pause">
+                <button class="control-btn col-xs-4 custom-btn" id="ctrl-btn-pause" onclick="player.pauseVideo()">
                   <i class="fa fa-pause"></i>
                   <span class="visible-sm-inline icon-text">PAUSE</span>
                 </button>
-                <button class="control-btn col-xs-4 custom-btn" id="ctrl-btn-stop">
+                <button class="control-btn col-xs-4 custom-btn" id="ctrl-btn-stop" onclick="player.stopVideo()">
                   <i class="fa fa-stop"></i>
                   <span class="visible-sm-inline icon-text">STOP</span>
                 </button>
               </div>
               <div class="row">
-                <button class="control-btn col-xs-3 custom-btn" id="ctrl-btn-step-backward">
+                <button class="control-btn col-xs-3 custom-btn" id="ctrl-btn-step-backward" onclick="stepBackwardClicked()">
                   <i class="fa fa-step-backward"></i>
                   <span class="visible-sm-inline icon-text">PREVIOUS</span>
                 </button>
-                <button class="control-btn col-xs-3 custom-btn" id="ctrl-btn-backward">
+                <button class="control-btn col-xs-3 custom-btn" id="ctrl-btn-backward" onclick="backwardClicked()">
                   <i class="fa fa-backward"></i>
                   <span class="visible-sm-inline icon-text">REWIND</span>
                 </button>
-                <button class="control-btn col-xs-3 custom-btn" id="ctrl-btn-forward">
+                <button class="control-btn col-xs-3 custom-btn" id="ctrl-btn-forward" onclick="forwardClicked()">
                   <i class="fa fa-forward"></i>
                   <span class="visible-sm-inline icon-text">FAST FORWARD</span>
                 </button>
-                <button class="control-btn col-xs-3 custom-btn" id="ctrl-btn-step-forward">
+                <button class="control-btn col-xs-3 custom-btn" id="ctrl-btn-step-forward" onclick="stepForwardClicked()">
                   <i class="fa fa-step-forward"></i>
                   <span class="visible-sm-inline icon-text">NEXT</span>
                 </button>
               </div>
               <div class="row">
-                <button class="control-btn col-xs-6 custom-btn" id="ctrl-btn-mute">
+                <button class="control-btn col-xs-6 custom-btn" id="ctrl-btn-mute" onclick="player.mute()">
                   <i class="fa fa-volume-off"></i>
                   <span class="visible-sm-inline icon-text">MUTE</span>
                 </button>
-                <button class="control-btn col-xs-6 custom-btn" id="ctrl-btn-unmute">
+                <button class="control-btn col-xs-6 custom-btn" id="ctrl-btn-unmute" onclick="player.unMute()">
                   <i class="fa fa-volume-up"></i>
                   <span class="visible-sm-inline icon-text">UNMUTE</span>
                 </button>
