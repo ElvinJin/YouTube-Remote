@@ -34,7 +34,6 @@
           </div>
           <div class="row">
             <div id="player"></div>
-            <script src="js/player.js"></script>
           </div>
         </div>
         <div id="right-col" class="col-xs-12 col-md-4">
@@ -44,21 +43,21 @@
             </div>
             <div class="the-panel">
               <div class="row">
-                <button class="control-btn col-xs-4 custom-btn" id="ctrl-btn-play" onclick="player.playVideo()">
+                <button class="control-btn col-xs-4 custom-btn" id="ctrl-btn-play" onclick="broadcastPlay()">
                   <i class="fa fa-play"></i>
                   <span class="visible-sm-inline icon-text">PLAY</span>
                 </button>
-                <button class="control-btn col-xs-4 custom-btn" id="ctrl-btn-pause" onclick="player.pauseVideo()">
+                <button class="control-btn col-xs-4 custom-btn" id="ctrl-btn-pause" onclick="broadcastPause()">
                   <i class="fa fa-pause"></i>
                   <span class="visible-sm-inline icon-text">PAUSE</span>
                 </button>
-                <button class="control-btn col-xs-4 custom-btn" id="ctrl-btn-stop" onclick="player.stopVideo()">
+                <button class="control-btn col-xs-4 custom-btn" id="ctrl-btn-stop" onclick="broadcastStop()">
                   <i class="fa fa-stop"></i>
                   <span class="visible-sm-inline icon-text">STOP</span>
                 </button>
               </div>
               <div class="row">
-                <button class="control-btn col-xs-3 custom-btn" id="ctrl-btn-step-backward" onclick="stepBackwardClicked()">
+                <button class="control-btn col-xs-3 custom-btn" id="ctrl-btn-step-backward" onclick="broadcastStepBackward()">
                   <i class="fa fa-step-backward"></i>
                   <span class="visible-sm-inline icon-text">PREVIOUS</span>
                 </button>
@@ -70,17 +69,17 @@
                   <i class="fa fa-forward"></i>
                   <span class="visible-sm-inline icon-text">FAST FORWARD</span>
                 </button>
-                <button class="control-btn col-xs-3 custom-btn" id="ctrl-btn-step-forward" onclick="stepForwardClicked()">
+                <button class="control-btn col-xs-3 custom-btn" id="ctrl-btn-step-forward" onclick="broadcastStepForward()">
                   <i class="fa fa-step-forward"></i>
                   <span class="visible-sm-inline icon-text">NEXT</span>
                 </button>
               </div>
               <div class="row">
-                <button class="control-btn col-xs-6 custom-btn" id="ctrl-btn-mute" onclick="player.mute()">
+                <button class="control-btn col-xs-6 custom-btn" id="ctrl-btn-mute" onclick="broadcastMute()">
                   <i class="fa fa-volume-off"></i>
                   <span class="visible-sm-inline icon-text">MUTE</span>
                 </button>
-                <button class="control-btn col-xs-6 custom-btn" id="ctrl-btn-unmute" onclick="player.unMute()">
+                <button class="control-btn col-xs-6 custom-btn" id="ctrl-btn-unmute" onclick="broadcastUnmute()">
                   <i class="fa fa-volume-up"></i>
                   <span class="visible-sm-inline icon-text">UNMUTE</span>
                 </button>
@@ -106,5 +105,9 @@
         </div>
       </div>
     </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/main.js"></script>
+
   </body>
 </html>
