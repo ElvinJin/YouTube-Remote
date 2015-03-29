@@ -1,16 +1,27 @@
 var express = require( 'express' );
 var app = express();
+var sessionDic = {};
 
 app.use( express.static( __dirname + '/public' ) );
 
 // Set up root-level routes
 // ------------------------
+
 app.get( '/', function ( request, response ) {
-	response.sendFile( __dirname + '/views/index.html');
+	var sessionCount = 1;
+	var targetSession = sessionCount.toString();
+	while (targetSession in sessionDic) {
+		sessionCount++;
+		targetSession = sessionCount.toString();
+	}
+	response.redirect('/session/' + targetSession);
 } );
 
-app.get( '/test', function ( request, response ) {
-	response.sendFile( __dirname + '/views/indexaa.html');
+app.get( '/session/:id([0-9]+)', function ( request, response ) {
+	if (!(request.params.id in sessionDic)) {
+		sessionDic[request.params.id] = {'numClients' : 0};
+	}
+	response.sendFile( __dirname + '/views/index.html');
 } );
 
 var host = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
@@ -23,14 +34,29 @@ var server = app.listen( port, host, function () {
 var io = require( 'socket.io' )( server );
 io.on( 'connection', function( socket ) {
 
-	console.log( 'New user connected' );
-	socket.on( 'disconnect', function() {
+	var sessionID;
+
+	socket.on('disconnect', function() {
 		console.log( 'User disconnected' );
-	} );
+		sessionDic[sessionID]['numClients'] = sessionDic[sessionID]['numClients'] - 1;
+		console.log('User left room ' + sessionID + '. # of users: ' + sessionDic[sessionID]['numClients']);
+
+	});
+
+	socket.on('register', function(id){
+		sessionID = id;
+		socket.join(sessionID);
+		sessionDic[sessionID]['numClients'] = sessionDic[sessionID]['numClients'] + 1;
+		console.log('New user joined room ' + sessionID + '. # of users: ' + sessionDic[sessionID]['numClients']);
+	});
 	
-	socket.on( 'command', function( cmdReceived ) {
-		console.log( 'Broadcasting ' + cmdReceived );
-		io.emit('command', cmdReceived);
-	} );
+	socket.on('command', function( cmdReceived ) {
+		if (sessionID) {
+			console.log( 'Broadcasting \'' + cmdReceived + '\' to room ' + sessionID);
+			io.to(sessionID).emit('command', cmdReceived);
+		} else {
+			socket.send("You haven't joined any session yet. Please refresh your browser.");
+		}
+	});
 
 } );

@@ -51,7 +51,19 @@ function onPlayerStateChange ( event ) {
 	}
 }
 
+function getSessionID () {
+	var urlParser = document.URL.split("/");
+	var sessionID = urlParser[urlParser.length - 1];
+	if (sessionID == '') {
+		sessionID = urlParser[urlParser.length - 2];
+	}
+	return sessionID;
+}
+
 var socket = io();
+var sessionID = getSessionID();
+// console.log('session: ' + sessionID);
+socket.emit('register', sessionID);
 ////// SEND - START //////
 function broadcastPlay () {
 	socket.emit('command', 'play');
