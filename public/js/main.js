@@ -152,4 +152,20 @@ socket.on( 'command', function(cmdReceived) {
 			break;
 	}
 });
+
+localStorage.setItem('playlist', JSON.stringify({'id':'aaa','name':'bbb'}));
+
+socket.on('requestLocalPlaylist', function() {
+	var localPlaylist = JSON.parse(localStorage.getItem('playlist'));
+	if (localPlaylist === null) {
+		localPlaylist = [];
+	}
+	socket.emit('upload', localPlaylist);
+	console.log('Uploaded local playlist: ' + localPlaylist);
+});
+
+socket.on('replaceLocalPlaylist', function(serverPlaylist){
+	localStorage.setItem('playlist', JSON.stringify(serverPlaylist));
+	console.log('Replaced local playlist with server playlist');
+});
 ////// RECEIVE - END //////

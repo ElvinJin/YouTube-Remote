@@ -38,8 +38,15 @@ io.on( 'connection', function( socket ) {
 
 	socket.on('disconnect', function() {
 		console.log( 'User disconnected' );
-		sessionDic[sessionID]['numClients'] = sessionDic[sessionID]['numClients'] - 1;
-		console.log('User left room ' + sessionID + '. # of users: ' + sessionDic[sessionID]['numClients']);
+		if (sessionDic[sessionID] !== undefined && sessionDic[sessionID] !== null) {
+			sessionDic[sessionID]['numClients'] = sessionDic[sessionID]['numClients'] - 1;
+			console.log('User left room ' + sessionID + '. # of users: ' + sessionDic[sessionID]['numClients']);
+
+			if (sessionDic[sessionID]['numClients'] == 0) {
+				sessionDic[sessionID]['playlist'] = [];
+				console.log('Nobody left, playlist for room ' + sessionID + ' cleared.');
+			}
+		}
 
 	});
 
@@ -48,6 +55,17 @@ io.on( 'connection', function( socket ) {
 		socket.join(sessionID);
 		sessionDic[sessionID]['numClients'] = sessionDic[sessionID]['numClients'] + 1;
 		console.log('New user joined room ' + sessionID + '. # of users: ' + sessionDic[sessionID]['numClients']);
+
+		if (sessionDic[sessionID]['numClients'] == 1) {
+			socket.emit('requestLocalPlaylist');
+		} else if (sessionDic[sessionID]['numClients'] > 1) {
+			socket.emit('replaceLocalPlaylist', sessionDic[sessionID]['playlist']);
+		}
+	});
+
+	socket.on('upload', function(localPlaylist) {
+		sessionDic[sessionID]['playlist'] = localPlaylist;
+		console.log('Replaced server playlist with local playlist ' + JSON.stringify(sessionDic[sessionID]['playlist']));
 	});
 	
 	socket.on('command', function( cmdReceived ) {
