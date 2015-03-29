@@ -121,7 +121,7 @@ io.on( 'connection', function( socket ) {
 		}
 	});
 
-	socket.on('playClickedVideo', function(vid){
-		io.to(sessionID).emit('loadVideo', vid);
+	socket.on('playClickedVideo', function(vid, index){
+		io.to(sessionID).emit('loadVideo', vid, index);
 	});
 } );

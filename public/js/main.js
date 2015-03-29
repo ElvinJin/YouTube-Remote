@@ -4,12 +4,15 @@ var firstScriptTag = document.getElementsByTagName( 'script' )[ 0 ];
 firstScriptTag.parentNode.insertBefore( tag, firstScriptTag );
 
 var player;
+var playingIndex = -1;
 function onYouTubeIframeAPIReady() {
 	if (window.innerWidth >= 992) {
 		player = new YT.Player( 'player', {
 			height : '100%',
 			width : '100%',
 			playerVars: { 'controls' : 0 },
+			videoId: '',
+
 			events : {
 				// 'onReady': onPlayerReady,
 				'onStateChange': onPlayerStateChange
@@ -25,7 +28,7 @@ window.addEventListener('resize', function() {
 				height : '100%',
 				width : '100%',
 				playerVars: { 'controls' : 0 },
-				videoId : 'M7lc1UVf-VE',
+				videoId: '',
 				events : {
 					// 'onReady': onPlayerReady,
 					'onStateChange': onPlayerStateChange
@@ -46,7 +49,11 @@ function onPlayerReady( event ) {
 
 function onPlayerStateChange ( event ) {
 	if (event.data == YT.PlayerState.ENDED) {
-		player.loadVideoById('xsWN1Wakuec');
+		var localPlaylist = JSON.parse(localStorage.getItem('playlist'));
+		if (playingIndex < localPlaylist.length - 1) {
+			playingIndex = playingIndex + 1;
+			player.loadVideoById(localPlaylist[playingIndex]['id']);
+		}
 	}
 }
 
@@ -124,10 +131,32 @@ function addVideo() {
 ////// SEND - END //////
 
 ////// RECEIVE - START //////
+function stepBackward(){
+	var localPlaylist = JSON.parse(localStorage.getItem('playlist'));
+
+	if (playingIndex - 1 >= 0 && playingIndex - 1 < localPlaylist.length) {
+		playingIndex = playingIndex - 1;
+		player.loadVideoById(localPlaylist[playingIndex]['id']);
+	};
+}
+
+function stepForward(){
+	var localPlaylist = JSON.parse(localStorage.getItem('playlist'));
+
+	if (playingIndex + 1 >= 0 && playingIndex + 1 < localPlaylist.length) {
+		playingIndex = playingIndex + 1;
+		player.loadVideoById(localPlaylist[playingIndex]['id']);
+	};
+}
+
 socket.on( 'command', function(cmdReceived) {
 	switch (cmdReceived) {
 		case 'play':
-			player.playVideo();
+			if (playingIndex < 0) {
+				stepForward();
+			} else {
+				player.playVideo();
+			}
 			break;
 		case 'pause':
 			player.pauseVideo();
@@ -136,7 +165,7 @@ socket.on( 'command', function(cmdReceived) {
 			player.stopVideo();
 			break;
 		case 'sb':
-			player.loadVideoById('6Y47qPyoywc');
+			stepBackward();
 			break;
 		case 'backward':
 			targetTime = player.getCurrentTime() - 2.0;
@@ -150,7 +179,7 @@ socket.on( 'command', function(cmdReceived) {
 			player.seekTo(currentTime+2.0);
 			break;
 		case 'sf':
-			player.loadVideoById('RFZrzg62Zj0');
+			stepForward();
 			break;
 		case 'mute':
 			player.mute();
@@ -178,7 +207,7 @@ socket.on('replaceLocalPlaylist', function(serverPlaylist){
 	localStorage.setItem('playlist', JSON.stringify(serverPlaylist));
 	console.log('Replaced local playlist with server playlist');
 	for (var i = 0; i < serverPlaylist.length; i++) {
-		addToPlaylistView(serverPlaylist[i]);
+		addToPlaylistView(serverPlaylist[i], i);
 	};
 });
 
@@ -201,7 +230,7 @@ socket.on('addUpdate', function(videoInfo){
 	localStorage.setItem('playlist', JSON.stringify(localPlaylist));
 
 	var index = localPlaylist.length - 1;
-	addToPlaylistView(videoInfo);
+	addToPlaylistView(videoInfo, index);
 
 	document.getElementById('add-btn').disabled = false;
 
@@ -217,20 +246,31 @@ socket.on('removeUpdate', function(vid, index){
 	var element = document.getElementById(vid);
 	listTable.removeChild(element);
 
+	if (index < playingIndex) {
+		playingIndex--;
+	} else if(index > playingIndex) {
+		playingIndex++;
+	} else {
+		player.stopVideo();
+		playingIndex = -1;
+	}
+
 });
 
-socket.on('loadVideo', function(vid) {
+socket.on('loadVideo', function(vid, index) {
 	player.loadVideoById(vid);
+	playingIndex = index;
 });
 ////// RECEIVE - END //////
 
-function addToPlaylistView(videoInfo) {
+function addToPlaylistView(videoInfo, index) {
 	var videoBtn = document.createElement('button');
 	videoBtn.classList.add('col-xs-10');
 	videoBtn.classList.add('row-content');
 	videoBtn.onclick = function(){
 		var vid = videoInfo['id'];
-		socket.emit('playClickedVideo', vid);
+		var thisIndex = index;
+		socket.emit('playClickedVideo', vid, thisIndex);
 	};
 	videoBtn.innerHTML = videoInfo['id'] + ': ' + videoInfo['title'];
 
