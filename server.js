@@ -1,4 +1,4 @@
-var express = require( 'express' );
+var express = require('express');
 var app = express();
 var sessionDic = {};
 
@@ -35,6 +35,7 @@ var io = require( 'socket.io' )( server );
 io.on( 'connection', function( socket ) {
 
 	var sessionID;
+	var req = require('request');
 
 	socket.on('disconnect', function() {
 		console.log( 'User disconnected' );
@@ -76,5 +77,7 @@ io.on( 'connection', function( socket ) {
 			socket.send("You haven't joined any session yet. Please refresh your browser.");
 		}
 	});
-
+	req('http://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=sQANr6r4Km', function(error, response, body) {
+  		console.log(body);
+	});
 } );
