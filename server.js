@@ -19,7 +19,7 @@ app.get( '/', function ( request, response ) {
 
 app.get( '/session/:id([0-9]+)', function ( request, response ) {
 	if (!(request.params.id in sessionDic)) {
-		sessionDic[request.params.id] = {'numClients' : 0};
+		sessionDic[request.params.id] = {'numClients' : 0, 'playlist' : []};
 	}
 	response.sendFile( __dirname + '/views/index.html');
 } );
