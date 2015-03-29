@@ -66,7 +66,8 @@ io.on( 'connection', function( socket ) {
 
 	socket.on('upload', function(localPlaylist) {
 		sessionDic[sessionID]['playlist'] = localPlaylist;
-		console.log('Replaced server playlist with local playlist ' + JSON.stringify(sessionDic[sessionID]['playlist']));
+		console.log('Replaced server playlist with local playlist');
+		socket.emit('replaceLocalPlaylist', sessionDic[sessionID]['playlist']);
 	});
 	
 	socket.on('command', function( cmdReceived ) {
@@ -79,17 +80,44 @@ io.on( 'connection', function( socket ) {
 	});
 
 	socket.on('addVideo', function(vid){
-		req('http://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=' + vid, function(error, response, body) {
-	  		if (body == 'Not Found') {
-	  			socket.emit('videoNotFound');
-	  		} else {
-	  			var videoInfo = JSON.parse(body);
-	  			var videoDic = {'id': vid, 'title':videoInfo['title']};
-	  			console.log('Adding video \'' + videoDic['id'] + ': ' + videoDic['title'] + '\'');
+		var shouldAdd = true;
 
-	  			sessionDic[sessionID]['playlist'].push(videoDic);
-	  			io.to(sessionID).emit('addUpdate', videoDic);
-	  		}
-		});
+		for (var i = 0; i < sessionDic[sessionID]['playlist'].length; i++) {
+			if (sessionDic[sessionID]['playlist'][i]['id'] == vid) {
+				shouldAdd = false;
+				socket.emit('addFailed', 'Video already added');
+
+			}
+		}
+		if (shouldAdd) {
+			req('http://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=' + vid, function(error, response, body) {
+				if (body == 'Not Found') {
+					socket.emit('addFailed', 'Invalid video ID');
+				} else {
+					var videoInfo = JSON.parse(body);
+					var videoDic = {'id': vid, 'title':videoInfo['title']};
+					console.log('Adding video \'' + videoDic['id'] + ': ' + videoDic['title'] + '\'');
+
+					sessionDic[sessionID]['playlist'].push(videoDic);
+					// console.log(sessionDic[sessionID]['playlist'].length);
+					io.to(sessionID).emit('addUpdate', videoDic);
+				}
+			});
+		}
+	});
+
+	socket.on('removeVideo', function(vid){
+		console.log('removing video: ' + vid);
+		var indexFound = -1;
+		for (var i = 0; i < sessionDic[sessionID]['playlist'].length; i++) {
+			if (sessionDic[sessionID]['playlist'][i]['id'] == vid) {
+				sessionDic[sessionID]['playlist'].splice(i, 1);
+				indexFound = i;
+				break;
+			}
+		}
+		if (indexFound != -1) {
+			io.to(sessionID).emit('removeUpdate', vid, indexFound);
+		}
 	});
 } );

@@ -178,25 +178,74 @@ socket.on('requestLocalPlaylist', function() {
 socket.on('replaceLocalPlaylist', function(serverPlaylist){
 	localStorage.setItem('playlist', JSON.stringify(serverPlaylist));
 	console.log('Replaced local playlist with server playlist');
+	for (var i = 0; i < serverPlaylist.length; i++) {
+		addToPlaylistView(serverPlaylist[i]);
+	};
 });
 
-socket.on('videoNotFound', function(){
+socket.on('addFailed', function(errMsg){
 	var warningLbl = document.createElement('label');
 	warningLbl.className = 'control-label';
 	warningLbl.setAttribute('for', 'inputError2');
 	warningLbl.setAttribute('id', 'errLbl');
-	warningLbl.innerHTML = 'Invalid video ID';
+	warningLbl.innerHTML = errMsg;
 
 	document.getElementById('errorLabel').appendChild(warningLbl);
 	document.getElementById('add-btn').disabled = false;
 });
 
 socket.on('addUpdate', function(videoInfo){
+	document.getElementById('vid-input').value = '';
+
 	var localPlaylist = JSON.parse(localStorage.getItem('playlist'));
 	localPlaylist.push(videoInfo);
 	localStorage.setItem('playlist', JSON.stringify(localPlaylist));
 
+	var index = localPlaylist.length - 1;
+	addToPlaylistView(videoInfo);
+
 	document.getElementById('add-btn').disabled = false;
 
 });
+
+socket.on('removeUpdate', function(vid, index){
+	console.log('removing video: ' + vid);
+	var localPlaylist = JSON.parse(localStorage.getItem('playlist'));
+	localPlaylist.splice(index, 1);
+	localStorage.setItem('playlist', JSON.stringify(localPlaylist));
+
+	var listTable = document.getElementById('list-table');
+	var element = document.getElementById(vid);
+	listTable.removeChild(element);
+
+});
 ////// RECEIVE - END //////
+
+function addToPlaylistView(videoInfo) {
+	var videoBtn = document.createElement('button');
+	videoBtn.classList.add('col-xs-10');
+	videoBtn.classList.add('row-content');
+	videoBtn.onclick = function(){
+		// var index = indexIn;
+		// socket.emit('removeVideo', index);
+	};
+	videoBtn.innerHTML = videoInfo['id'] + ': ' + videoInfo['title'];
+
+	var deleteBtn = document.createElement('button');
+	deleteBtn.classList.add('col-xs-2');
+	deleteBtn.classList.add('custom-btn');
+	deleteBtn.classList.add('del-btn');
+	deleteBtn.innerHTML = 'delete'
+	deleteBtn.onclick = function(){
+		socket.emit('removeVideo', videoInfo['id']);
+	};
+
+	var div = document.createElement('div');
+	div.classList.add('list-row');
+	div.classList.add('col-xs-12');
+	div.appendChild(videoBtn);
+	div.appendChild(deleteBtn);
+	div.setAttribute('id', videoInfo['id']);
+
+	document.getElementById('list-table').appendChild(div);
+}
