@@ -28,48 +28,9 @@ io.on( 'connection', function( socket ) {
 		console.log( 'User disconnected' );
 	} );
 	
-	socket.on( 'play', function( ) {
-		console.log( 'Broadcasting PLAY' );
-		io.emit( 'play' );
+	socket.on( 'command', function( cmdReceived ) {
+		console.log( 'Broadcasting ' + cmdReceived );
+		io.emit('command', cmdReceived);
 	} );
-	
-	socket.on( 'pause', function( ) {
-		console.log( 'Broadcasting PAUSE' );
-		io.emit( 'pause' );
-	} );
-	
-	socket.on( 'stop', function( ) {
-		console.log( 'Broadcasting STOP' );
-		io.emit( 'stop' );
-	} );
-	
-	socket.on( 'sb', function( ) {
-		console.log( 'Broadcasting STEP-BACKWARD' );
-		io.emit( 'sb' );
-	} );
-	
-	socket.on( 'backward', function( ) {
-		console.log( 'Broadcasting BACKWARD' );
-		io.emit( 'backward' );
-	} );
-	
-	socket.on( 'forward', function( ) {
-		console.log( 'Broadcasting FORWARD' );
-		io.emit( 'forward' );
-	} );
-	
-	socket.on( 'sf', function( ) {
-		console.log( 'Broadcasting STEP-FORWARD' );
-		io.emit( 'sf' );
-	} );
-	
-	socket.on( 'mute', function( ) {
-		console.log( 'Broadcasting MUTE' );
-		io.emit( 'mute' );
-	} );
-	
-	socket.on( 'unmute', function( ) {
-		console.log( 'Broadcasting UNMUTE' );
-		io.emit( 'unmute' );
-	} );
+
 } );

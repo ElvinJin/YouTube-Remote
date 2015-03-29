@@ -54,25 +54,25 @@ function onPlayerStateChange ( event ) {
 var socket = io();
 ////// SEND - START //////
 function broadcastPlay () {
-	socket.emit('play');
+	socket.emit('command', 'play');
 }
 
 function broadcastPause () {
-	socket.emit('pause');
+	socket.emit('command', 'pause');
 }
 
 function broadcastStop () {
-	socket.emit('stop');
+	socket.emit('command', 'stop');
 }
 
 function broadcastStepBackward () {
-	socket.emit('sb');
+	socket.emit('command', 'sb');
 }
 
 var backwardTimeOut;
 function backwardMouseDown () {
-	socket.emit('backward');
-	backwardTimeOut = setInterval(function(){socket.emit('backward');}, 300);
+	socket.emit('command', 'backward');
+	backwardTimeOut = setInterval(function(){socket.emit('command', 'backward');}, 300);
 }
 function backwardMouseUp () {
 	clearInterval(backwardTimeOut);
@@ -80,65 +80,64 @@ function backwardMouseUp () {
 
 var forwardTimeOut;
 function forwardMouseDown () {
-	socket.emit('forward');
-	forwardTimeOut = setInterval(function(){socket.emit('forward');}, 300);
+	socket.emit('command', 'forward');
+	forwardTimeOut = setInterval(function(){socket.emit('command', 'forward');}, 300);
 }
 function forwardMouseUp () {
 	clearInterval(forwardTimeOut);
 }
 
 function broadcastStepForward () {
-	socket.emit('sf');
+	socket.emit('command', 'sf');
 }
 
 function broadcastMute () {
-	socket.emit('mute');
+	socket.emit('command', 'mute');
 }
 
 function broadcastUnmute () {
-	socket.emit('unmute');
+	socket.emit('command', 'unmute');
 }
 ////// SEND - END //////
 
 ////// RECEIVE - START //////
-socket.on( 'play', function( ) {
-	player.playVideo();
-} );
-
-socket.on( 'pause', function( ) {
-	player.pauseVideo();
-} );
-
-socket.on( 'stop', function( ) {
-	player.stopVideo();
-} );
-
-socket.on( 'sb', function( ) {
-	player.loadVideoById('6Y47qPyoywc');
-} );
-
-socket.on( 'backward', function( ) {
-	targetTime = player.getCurrentTime() - 2.0;
-	if (targetTime < 0) {
-		targetTime = 0;
+socket.on( 'command', function(cmdReceived) {
+	switch (cmdReceived) {
+		case 'play':
+			player.playVideo();
+			break;
+		case 'pause':
+			player.pauseVideo();
+			break;
+		case 'stop':
+			player.stopVideo();
+			break;
+		case 'sb':
+			player.loadVideoById('6Y47qPyoywc');
+			break;
+		case 'backward':
+			targetTime = player.getCurrentTime() - 2.0;
+			if (targetTime < 0) {
+				targetTime = 0;
+			}
+			player.seekTo(targetTime);
+			break;
+		case 'forward':
+			currentTime = player.getCurrentTime();
+			player.seekTo(currentTime+2.0);
+			break;
+		case 'sf':
+			player.loadVideoById('RFZrzg62Zj0');
+			break;
+		case 'mute':
+			player.mute();
+			break;
+		case 'unmute':
+			player.unMute();
+			break;
+		default:
+			console.log('Command received is not recognized');
+			break;
 	}
-	player.seekTo(targetTime);
-} );
-
-socket.on( 'forward', function( ) {
-	currentTime = player.getCurrentTime();
-	player.seekTo(currentTime+2.0);
-} );
-
-socket.on( 'sf', function( ) {
-	player.loadVideoById('RFZrzg62Zj0');
-} );
-
-socket.on( 'mute', function( ) {
-	player.mute();
-} );
-
-socket.on( 'unmute', function( ) {
-	player.unMute();
-} );
+});
 ////// RECEIVE - END //////
