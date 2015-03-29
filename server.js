@@ -120,4 +120,8 @@ io.on( 'connection', function( socket ) {
 			io.to(sessionID).emit('removeUpdate', vid, indexFound);
 		}
 	});
+
+	socket.on('playClickedVideo', function(vid){
+		io.to(sessionID).emit('loadVideo', vid);
+	});
 } );

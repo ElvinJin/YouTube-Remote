@@ -10,7 +10,6 @@ function onYouTubeIframeAPIReady() {
 			height : '100%',
 			width : '100%',
 			playerVars: { 'controls' : 0 },
-			videoId : 'M7lc1UVf-VE',
 			events : {
 				// 'onReady': onPlayerReady,
 				'onStateChange': onPlayerStateChange
@@ -219,6 +218,10 @@ socket.on('removeUpdate', function(vid, index){
 	listTable.removeChild(element);
 
 });
+
+socket.on('loadVideo', function(vid) {
+	player.loadVideoById(vid);
+});
 ////// RECEIVE - END //////
 
 function addToPlaylistView(videoInfo) {
@@ -226,8 +229,8 @@ function addToPlaylistView(videoInfo) {
 	videoBtn.classList.add('col-xs-10');
 	videoBtn.classList.add('row-content');
 	videoBtn.onclick = function(){
-		// var index = indexIn;
-		// socket.emit('removeVideo', index);
+		var vid = videoInfo['id'];
+		socket.emit('playClickedVideo', vid);
 	};
 	videoBtn.innerHTML = videoInfo['id'] + ': ' + videoInfo['title'];
 
