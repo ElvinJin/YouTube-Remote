@@ -73,7 +73,7 @@ io.on( 'connection', function( socket ) {
 	socket.on('command', function( cmdReceived ) {
 		if (sessionID) {
 			console.log( 'Broadcasting \'' + cmdReceived + '\' to room ' + sessionID);
-			io.to(sessionID).emit('command', cmdReceived);
+			io.to(sessionID).emit('commandUpdate', cmdReceived);
 		} else {
 			socket.send("You haven't joined any session yet. Please refresh your browser.");
 		}
@@ -119,6 +119,11 @@ io.on( 'connection', function( socket ) {
 		if (indexFound != -1) {
 			io.to(sessionID).emit('removeUpdate', vid, indexFound);
 		}
+	});
+
+	socket.on('clearList', function(){
+		sessionDic[sessionID]['playlist'] = [];
+		io.to(sessionID).emit('clearUpdate');
 	});
 
 	socket.on('playClickedVideo', function(vid, index){

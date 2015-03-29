@@ -44,7 +44,7 @@ window.addEventListener('resize', function() {
 			} );
 		}
 	} else {
-		if (player !== null) {
+		if (player !== null && player !== undefined) {
 			player.destroy();
 		}
 		player = null;
@@ -136,68 +136,86 @@ function addVideo() {
 		document.getElementById('add-btn').disabled = true;
 	};
 }
+
+function clearList(){
+	socket.emit('clearList');
+}
 ////// SEND - END //////
 
 ////// RECEIVE - START //////
 function stepBackward(){
 	var localPlaylist = JSON.parse(localStorage.getItem('playlist'));
 
-	if (playingIndex - 1 >= 0 && playingIndex - 1 < localPlaylist.length) {
+	if (playingIndex != -1 && playingIndex - 1 >= 0 && playingIndex - 1 < localPlaylist.length) {
 		playingIndex = playingIndex - 1;
-		player.loadVideoById(localPlaylist[playingIndex]['id']);
+
+		if (player !== null && player !== undefined) {
+			player.loadVideoById(localPlaylist[playingIndex]['id']);
+		}
 	};
 }
 
 function stepForward(){
 	var localPlaylist = JSON.parse(localStorage.getItem('playlist'));
 
-	if (playingIndex + 1 >= 0 && playingIndex + 1 < localPlaylist.length) {
+	if (playingIndex != -1 && playingIndex + 1 >= 0 && playingIndex + 1 < localPlaylist.length) {
 		playingIndex = playingIndex + 1;
-		player.loadVideoById(localPlaylist[playingIndex]['id']);
+		if (player !== null && player !== undefined) {
+			player.loadVideoById(localPlaylist[playingIndex]['id']);
+		}
 	};
 }
 
-socket.on( 'command', function(cmdReceived) {
-	switch (cmdReceived) {
-		case 'play':
-			if (playingIndex < 0) {
+socket.on( 'commandUpdate', function(cmdReceived) {
+	if (player !== null && player !== undefined) {
+		switch (cmdReceived) {
+			case 'play':
+				console.log(playingIndex);
+				if (playingIndex < 0) {
+					var localPlaylist = JSON.parse(localStorage.getItem('playlist'));
+					if (localPlaylist.length > 0) {
+						player.loadVideoById(localPlaylist[0]['id']);
+						playingIndex = 0;
+					}
+				} else {
+					player.playVideo();
+				}
+				break;
+			case 'pause':
+				player.pauseVideo();
+				break;
+			case 'stop':
+				player.stopVideo();
+				// player.seekTo(0.0);
+				console.log('stopped');
+				break;
+			case 'sb':
+				stepBackward();
+				break;
+			case 'backward':
+				targetTime = player.getCurrentTime() - 2.0;
+				if (targetTime < 0) {
+					targetTime = 0;
+				}
+				player.seekTo(targetTime);
+				break;
+			case 'forward':
+				currentTime = player.getCurrentTime();
+				player.seekTo(currentTime+2.0);
+				break;
+			case 'sf':
 				stepForward();
-			} else {
-				player.playVideo();
-			}
-			break;
-		case 'pause':
-			player.pauseVideo();
-			break;
-		case 'stop':
-			player.stopVideo();
-			break;
-		case 'sb':
-			stepBackward();
-			break;
-		case 'backward':
-			targetTime = player.getCurrentTime() - 2.0;
-			if (targetTime < 0) {
-				targetTime = 0;
-			}
-			player.seekTo(targetTime);
-			break;
-		case 'forward':
-			currentTime = player.getCurrentTime();
-			player.seekTo(currentTime+2.0);
-			break;
-		case 'sf':
-			stepForward();
-			break;
-		case 'mute':
-			player.mute();
-			break;
-		case 'unmute':
-			player.unMute();
-			break;
-		default:
-			console.log('Command received is not recognized');
-			break;
+				break;
+			case 'mute':
+				player.mute();
+				break;
+			case 'unmute':
+				player.unMute();
+				break;
+			default:
+				console.log('Command received is not recognized');
+				break;
+		}
 	}
 });
 
@@ -259,15 +277,34 @@ socket.on('removeUpdate', function(vid, index){
 	} else if(index > playingIndex) {
 		playingIndex++;
 	} else {
-		player.stopVideo();
+		if (player !== null && player !== undefined) {
+			player.stopVideo();
+		}
 		playingIndex = -1;
 	}
 
 });
 
-socket.on('loadVideo', function(vid, index) {
-	player.loadVideoById(vid);
-	playingIndex = index;
+socket.on('loadVideo', function(vid, index) {	
+	if (player !== null && player !== undefined) {
+		player.loadVideoById(vid);
+		playingIndex = index;
+	}
+});
+
+socket.on('clearUpdate', function(){
+	var localPlaylist = [];
+	localStorage.setItem('playlist', JSON.stringify(localPlaylist));
+
+	if (player !== null && player !== undefined) {
+		player.loadVideoById('');
+		player.stopVideo();
+	}
+
+	var listTable = document.getElementById('list-table');
+	while (listTable.hasChildNodes()) {
+		listTable.removeChild(listTable.lastChild);
+	}
 });
 ////// RECEIVE - END //////
 
