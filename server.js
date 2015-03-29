@@ -84,6 +84,11 @@ io.on( 'connection', function( socket ) {
 	  			socket.emit('videoNotFound');
 	  		} else {
 	  			var videoInfo = JSON.parse(body);
+	  			var videoDic = {'id': vid, 'title':videoInfo['title']};
+	  			console.log('Adding video \'' + videoDic['id'] + ': ' + videoDic['title'] + '\'');
+
+	  			sessionDic[sessionID]['playlist'].push(videoDic);
+	  			io.to(sessionID).emit('addUpdate', videoDic);
 	  		}
 		});
 	});

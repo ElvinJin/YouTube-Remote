@@ -169,6 +169,7 @@ socket.on('requestLocalPlaylist', function() {
 	var localPlaylist = JSON.parse(localStorage.getItem('playlist'));
 	if (localPlaylist === null) {
 		localPlaylist = [];
+		localStorage.setItem('playlist', JSON.stringify(localPlaylist));
 	}
 	socket.emit('upload', localPlaylist);
 	console.log('Uploaded local playlist: ' + localPlaylist);
@@ -188,5 +189,14 @@ socket.on('videoNotFound', function(){
 
 	document.getElementById('errorLabel').appendChild(warningLbl);
 	document.getElementById('add-btn').disabled = false;
+});
+
+socket.on('addUpdate', function(videoInfo){
+	var localPlaylist = JSON.parse(localStorage.getItem('playlist'));
+	localPlaylist.push(videoInfo);
+	localStorage.setItem('playlist', JSON.stringify(localPlaylist));
+
+	document.getElementById('add-btn').disabled = false;
+
 });
 ////// RECEIVE - END //////
