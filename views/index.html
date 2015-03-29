@@ -92,10 +92,11 @@
             </div>
             <div class="the-panel">
               <div class="row">
+                <div id="errorLabel"></div>
                 <div class="input-group" id="vid-input-group">
-                  <input class="form-control" id="vid-input" type="text" name="video-id" placeholder="Enter video ID or URL">
+                  <input class="form-control" id="vid-input" type="text" name="video-id" placeholder="Enter video ID">
                   <div class="input-group-addon">
-                    <button class="custom-btn" id="add-btn"><i class="fa fa-plus"></i></button>
+                    <button class="custom-btn" id="add-btn" onclick="addVideo()" aria-describedby="inputError2Status"><i class="fa fa-plus"></i></button>
                   </div>
                 </div>
                 <button class="col-xs-12 custom-btn" id="clear-btn">

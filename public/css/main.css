@@ -137,3 +137,7 @@ span.icon-text {
 #vid-input-group {
 	margin-bottom: 20px;
 }
+
+#errLbl {
+	color: red;
+}

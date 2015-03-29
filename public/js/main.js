@@ -64,6 +64,7 @@ var socket = io();
 var sessionID = getSessionID();
 // console.log('session: ' + sessionID);
 socket.emit('register', sessionID);
+
 ////// SEND - START //////
 function broadcastPlay () {
 	socket.emit('command', 'play');
@@ -110,6 +111,17 @@ function broadcastMute () {
 function broadcastUnmute () {
 	socket.emit('command', 'unmute');
 }
+
+function addVideo() {	
+	document.getElementById('errorLabel').innerHTML = '';
+
+	var vid = document.getElementById('vid-input').value;
+	console.log('Adding video: ' + vid);
+	if (vid !== null && vid != '') {
+		socket.emit('addVideo', vid);
+		document.getElementById('add-btn').disabled = true;
+	};
+}
 ////// SEND - END //////
 
 ////// RECEIVE - START //////
@@ -153,8 +165,6 @@ socket.on( 'command', function(cmdReceived) {
 	}
 });
 
-localStorage.setItem('playlist', JSON.stringify({'id':'aaa','name':'bbb'}));
-
 socket.on('requestLocalPlaylist', function() {
 	var localPlaylist = JSON.parse(localStorage.getItem('playlist'));
 	if (localPlaylist === null) {
@@ -167,5 +177,16 @@ socket.on('requestLocalPlaylist', function() {
 socket.on('replaceLocalPlaylist', function(serverPlaylist){
 	localStorage.setItem('playlist', JSON.stringify(serverPlaylist));
 	console.log('Replaced local playlist with server playlist');
+});
+
+socket.on('videoNotFound', function(){
+	var warningLbl = document.createElement('label');
+	warningLbl.className = 'control-label';
+	warningLbl.setAttribute('for', 'inputError2');
+	warningLbl.setAttribute('id', 'errLbl');
+	warningLbl.innerHTML = 'Invalid video ID';
+
+	document.getElementById('errorLabel').appendChild(warningLbl);
+	document.getElementById('add-btn').disabled = false;
 });
 ////// RECEIVE - END //////

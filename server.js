@@ -77,7 +77,14 @@ io.on( 'connection', function( socket ) {
 			socket.send("You haven't joined any session yet. Please refresh your browser.");
 		}
 	});
-	req('http://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=sQANr6r4Km', function(error, response, body) {
-  		console.log(body);
+
+	socket.on('addVideo', function(vid){
+		req('http://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=' + vid, function(error, response, body) {
+	  		if (body == 'Not Found') {
+	  			socket.emit('videoNotFound');
+	  		} else {
+	  			var videoInfo = JSON.parse(body);
+	  		}
+		});
 	});
 } );
