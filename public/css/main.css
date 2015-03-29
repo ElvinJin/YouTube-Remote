@@ -37,6 +37,10 @@
 	margin: 40px auto;
 }
 
+#qrcode {
+	padding-top: 50px;
+}
+
 .title-banner {
 	height: 40px;
 	line-height: 40px;

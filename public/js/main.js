@@ -3,6 +3,14 @@ tag.src = "https://www.youtube.com/iframe_api";
 var firstScriptTag = document.getElementsByTagName( 'script' )[ 0 ];
 firstScriptTag.parentNode.insertBefore( tag, firstScriptTag );
 
+// load QR code
+var qrImg = document.createElement('img');
+qrImg.src = 'https://chart.googleapis.com/chart?cht=qr&chs=100x100&chl=' + encodeURIComponent(document.URL);
+qrImg.className = 'qrImg';
+var qrDiv = document.getElementById('qrcode');
+qrDiv.appendChild(qrImg);
+
+// load player
 var player;
 var playingIndex = -1;
 function onYouTubeIframeAPIReady() {
