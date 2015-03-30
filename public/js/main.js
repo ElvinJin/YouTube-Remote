@@ -11,7 +11,7 @@ var qrDiv = document.getElementById('qrcode');
 qrDiv.appendChild(qrImg);
 
 // load player
-var player;
+var player = null;
 var playingIndex = -1;
 function onYouTubeIframeAPIReady() {
 	if (window.innerWidth >= 992) {
@@ -186,6 +186,7 @@ socket.on( 'commandUpdate', function(cmdReceived) {
 				break;
 			case 'stop':
 				player.stopVideo();
+				player.seekTo(0.0);
 				// player.seekTo(0.0);
 				console.log('stopped');
 				break;
